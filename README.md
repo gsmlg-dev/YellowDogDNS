@@ -1,4 +1,4 @@
-# Yello Dog DNS
+# Yellow Dog DNS
 
 ![Yellow Dog DNS](./yellow_dog.png)
 
