@@ -8,7 +8,7 @@ defmodule YellowDog.DNS.Server do
   defmacro __using__(_) do
     quote [] do
       use GenServer
-
+      require Logger
       @doc """
       Start YellowDog.DNS.Server` server.
 
@@ -21,13 +21,18 @@ defmodule YellowDog.DNS.Server do
       end
 
       def init([port]) do
-        socket = YellowDog.Socket.UDP.open!(port, as: :binary, mode: :active)
-        IO.puts("DNS Server listening at #{port}")
-
-        # accept_loop(socket, handler)
-        {:ok, %{port: port, socket: socket}}
+        {:ok, %{port: port, socket: nil}, {:continue, :open_port}}
       end
 
+      @impl true
+      def handle_continue(:open_port, %{port: port} = state) do
+        socket = YellowDog.Socket.UDP.open!(port, as: :binary, mode: :active)
+        Logger.info("YellowDog.DNS.Server started on socket #{inspect(socket)}")
+        # accept_loop(socket, handler)
+        {:noreply, %{state | socket: socket}}
+      end
+
+      @impl true
       def handle_info({:udp, client, ip, wtv, data}, state) do
         record = YellowDog.DNS.Record.decode(data)
         response = handle(record, client)

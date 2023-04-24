@@ -1,4 +1,4 @@
-defmodule YellowDog.Server.Server do
+defmodule YellowDog.Server.NameServer do
   @moduledoc """
   Implementing YellowDog.DNS.Server behaviour
   """

@@ -16,3 +16,5 @@ import Config
 #       format: "$date $time [$level] $metadata$message\n",
 #       metadata: [:user_id]
 #
+
+config :yellow_dog, YellowDog.Server, port: 5454
