@@ -17,4 +17,6 @@ import Config
 #       metadata: [:user_id]
 #
 
-config :yellow_dog, YellowDog.Server, port: 5454
+config :yellow_dog, YellowDog.Server,
+  port: 5454,
+  default_forwarder: {"1.2.4.8", 53}

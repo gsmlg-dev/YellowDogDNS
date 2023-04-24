@@ -10,16 +10,16 @@ defmodule YellowDog.DNS do
       iex> YellowDog.DNS.resolve("gsmlg.net", :txt)
       {:ok, [['v=spf1 +mx ~all']]}
 
-      iex> YellowDog.DNS.resolve("gsmlg.org", :a, {"8.8.8.8", 53})
+      iex> YellowDog.DNS.resolve("gsmlg.org", :a, {"1.2.4.8", 53})
       {:ok, [{167, 179, 98, 144}]}
 
-      iex> YellowDog.DNS.resolve("gsmlg.org", :a, {"8.8.8.8", 53}, :tcp)
+      iex> YellowDog.DNS.resolve("gsmlg.org", :a, {"1.2.4.8", 53}, :tcp)
       {:ok, [{167, 179, 98, 144}]}
 
   """
   @spec resolve(String.t(), atom, {String.t(), :inet.port()}, :tcp | :udp) ::
           {atom, :inet.ip()} | {atom, list} | {atom, atom}
-  def resolve(domain, type \\ :a, dns_server \\ {"8.8.8.8", 53}, proto \\ :udp) do
+  def resolve(domain, type \\ :a, dns_server \\ {"1.2.4.8", 53}, proto \\ :udp) do
     case query(domain, type, dns_server, proto).anlist do
       answers when is_list(answers) and length(answers) > 0 ->
         data =
@@ -49,16 +49,16 @@ defmodule YellowDog.DNS do
 
   Queries for A records, using OpenYellowDog.DNS:
 
-      iex> YellowDog.DNS.query("gsmlg.org", :a, { "208.67.220.220", 53})
+      iex> YellowDog.DNS.query("gsmlg.org", :a, { "1.2.4.8", 53})
 
 
   Queries for A records, using OpenYellowDog.DNS, with TCP:
 
-      iex> YellowDog.DNS.query("gsmlg.org", :a, { "208.67.220.220", 53}, :tcp)
+      iex> YellowDog.DNS.query("gsmlg.org", :a, { "1.2.4.8", 53}, :tcp)
 
   """
   @spec query(String.t(), atom, {String.t(), :inet.port()}, :tcp | :udp) :: YellowDog.DNS.Record.t()
-  def query(domain, type \\ :a, dns_server \\ {"8.8.8.8", 53}, proto \\ :udp) do
+  def query(domain, type \\ :a, dns_server \\ {"1.2.4.8", 53}, proto \\ :udp) do
     record = %YellowDog.DNS.Record{
       header: %YellowDog.DNS.Header{rd: true},
       qdlist: [%YellowDog.DNS.Query{domain: to_charlist(domain), type: type, class: :in}]

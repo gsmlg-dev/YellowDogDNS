@@ -6,6 +6,8 @@ defmodule YellowDog.Server.NameServer do
   use YellowDog.DNS.Server
   require Logger
 
+  @default_forwarder Application.compile_env(:yellow_dog, YellowDog.Server) |> Keyword.get(:default_forwarder)
+
   def handle(record, _client) do
     # record: %YellowDog.DNS.Record{
     #   anlist: [],
@@ -45,6 +47,7 @@ defmodule YellowDog.Server.NameServer do
             anlist: [],
             arlist: []
         }
+        forward_lookup(record)
 
       _ ->
         %{
@@ -54,5 +57,38 @@ defmodule YellowDog.Server.NameServer do
             arlist: []
         }
     end
+  end
+
+  # default_forwarder
+  def forward_lookup(record, dns_server \\ @default_forwarder, proto \\ :udp) do
+    encoded_record = record |> YellowDog.DNS.Record.encode()
+    response_data =
+      case proto do
+        :udp ->
+          client = YellowDog.Socket.UDP.open!(0)
+
+          YellowDog.Socket.Datagram.send!(client, encoded_record, dns_server)
+
+          {data, _server} = YellowDog.Socket.Datagram.recv!(client, timeout: 5_000)
+
+          :gen_udp.close(client)
+
+          data
+
+        :tcp ->
+          # Set our packet mode to be 2, which indicates there is a 2 byte, big
+          # endian length field on our packets sent and recv'd
+          socket = YellowDog.Socket.TCP.connect!(dns_server, timeout: 5_000, packet: 2)
+
+          :ok = YellowDog.Socket.Stream.send(socket, encoded_record)
+
+          data = YellowDog.Socket.Stream.recv!(socket)
+
+          YellowDog.Socket.Stream.close!(socket)
+
+          data
+      end
+
+    YellowDog.DNS.Record.decode(response_data)
   end
 end

@@ -4,15 +4,15 @@ defmodule YellowDog do
   """
 
   @doc """
-  Hello world.
+  Load config from file
 
   ## Examples
 
-      iex> YellowDog.hello()
-      :world
+      iex> YellowDog.load_config()
+      %YellowDog.Config{}
 
   """
-  def hello do
-    :world
+  def load_config do
+    # %YellowDog.Config{}
   end
 end

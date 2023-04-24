@@ -14,7 +14,7 @@ defmodule YellowDog.Server.Zone do
           domain: domain,
           type: type,
           ttl: 0,
-          data: {1, 2, 3, 4}
+          data: {5, 6, 7, 8}
         }
 
         if type == :a do
