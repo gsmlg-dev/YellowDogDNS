@@ -31,7 +31,7 @@ defmodule YellowDog.Server.NameServer do
     # query: %YellowDog.DNS.Query{class: :in, domain: 'zdns.cn', type: :a, unicast_response: false}
     Logger.info(fn -> "Query: #{inspect(query)}" end)
 
-    case YellowDog.Server.Zone.findByDomain(query.domain, query.type) do
+    case YellowDog.Server.Zone.findByDomain(query) do
       {:ok, resourcs} ->
         %{
           record

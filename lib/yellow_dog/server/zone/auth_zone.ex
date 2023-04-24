@@ -5,7 +5,7 @@ defmodule YellowDog.Server.Zone.AuthZone do
   def getZone(domain) do
   end
 
-  def findByDomain(domain, type) do
+  def findByDomain(%YellowDog.DNS.Query{domain: domain, type: type}) do
     list = domain |> to_string |> String.split(".") |> Enum.reverse()
 
     case list do
