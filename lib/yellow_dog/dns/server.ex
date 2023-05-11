@@ -33,10 +33,14 @@ defmodule YellowDog.DNS.Server do
       end
 
       @impl true
-      def handle_info({:udp, client, ip, wtv, data}, state) do
+      def handle_info({:udp, client, ip, wtv, data}, %{socket: socket} = state) do
         record = YellowDog.DNS.Record.decode(data)
-        response = handle(record, client)
-        YellowDog.Socket.Datagram.send!(state.socket, YellowDog.DNS.Record.encode(response), {ip, wtv})
+
+        Task.async(fn ->
+          response = handle(record, client)
+          YellowDog.Socket.Datagram.send!(socket, YellowDog.DNS.Record.encode(response), {ip, wtv})
+        end) |> Task.ignore()
+
         {:noreply, state}
       end
     end
