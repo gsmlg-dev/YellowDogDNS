@@ -14,9 +14,9 @@ defmodule YellowDog.Logger do
     Logger.info("query: " <> message)
   end
 
-  @spec reqsponse(String.t()) :: :ok
-  def reqsponse(message) do
-    Logger.info("reqsponse: " <> message)
+  @spec response(String.t()) :: :ok
+  def response(message) do
+    Logger.info("response: " <> message)
   end
 
   @spec forward(String.t()) :: :ok
