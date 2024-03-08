@@ -24,6 +24,8 @@ ENV YD_PORT=53 \
     YD_FORWARDER="8.8.8.8" \
     YD_FORWARDER_PORT=53
 
+RUN apk add --update --no-cache libncursesw libstdc++
+
 COPY --from=builder /app/_build/prod/rel/yellow_dog /app
 
 EXPOSE 53

@@ -6,9 +6,6 @@ defmodule YellowDog.Server.NameServer do
   use YellowDog.DNS.Server
   alias YellowDog.Logger, as: YLog
 
-  @default_forwarder Application.compile_env(:yellow_dog, YellowDog.Server)
-                     |> Keyword.get(:default_forwarder)
-
   @impl true
   def handle(record, _client) do
     # record: %YellowDog.DNS.Record{
@@ -49,13 +46,13 @@ defmodule YellowDog.Server.NameServer do
             anlist: [],
             arlist: []
         }
-
-        forward_lookup(record)
+        forwarder = Application.get_env(:yellow_dog, YellowDog.Server) |> Keyword.get(:default_forwarder)
+        forward_lookup(record, forwarder)
     end
   end
 
   # default_forwarder
-  def forward_lookup(record, dns_server \\ @default_forwarder, proto \\ :udp) do
+  def forward_lookup(record, dns_server, proto \\ :udp) do
     encoded_record = record |> YellowDog.DNS.Record.encode()
 
     response_data =
