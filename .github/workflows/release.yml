@@ -11,7 +11,7 @@ jobs:
       version: ${{ steps.semantic.outputs.new_release_version }}
     steps:
       - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action
+        uses: styfle/cancel-workflow-action@0.12.1
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 
