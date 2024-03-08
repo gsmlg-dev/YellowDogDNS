@@ -54,6 +54,7 @@ defmodule YellowDog.Server.NameServer do
   # default_forwarder
   def forward_lookup(record, dns_server, proto \\ :udp) do
     encoded_record = record |> YellowDog.DNS.Record.encode()
+    YLog.forward("Querying #{record.qdlist |> List.first |> inspect()} using #{proto} to #{inspect(dns_server)}")
 
     response_data =
       case proto do

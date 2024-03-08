@@ -68,7 +68,7 @@ defmodule YellowDog.DNS do
     }
 
     encoded_record = YellowDog.DNS.Record.encode(record)
-    YLog.forward("Querying #{domain} for #{type} using #{proto} to #{inspect(dns_server)}")
+    YLog.query("Querying #{domain} for #{type} using #{proto} to #{inspect(dns_server)}")
 
     response_data =
       case proto do
