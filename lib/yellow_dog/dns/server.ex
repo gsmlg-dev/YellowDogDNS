@@ -3,12 +3,14 @@ defmodule YellowDog.DNS.Server do
   YellowDog.DNS server based on `GenServer`.
   """
 
-  @callback handle(YellowDog.DNS.Record.t(), {:inet.ip(), :inet.port()}) :: YellowDog.DNS.Record.t()
+  @callback handle(YellowDog.DNS.Record.t(), {:inet.ip(), :inet.port()}) ::
+              YellowDog.DNS.Record.t()
 
   defmacro __using__(_) do
     quote [] do
       use GenServer
-      require Logger
+      alias YellowDog.Logger, as: YLog
+
       @doc """
       Start YellowDog.DNS.Server` server.
 
@@ -20,6 +22,7 @@ defmodule YellowDog.DNS.Server do
         GenServer.start_link(name, [port])
       end
 
+      @impl true
       def init([port]) do
         {:ok, %{port: port, socket: nil}, {:continue, :open_port}}
       end
@@ -27,7 +30,7 @@ defmodule YellowDog.DNS.Server do
       @impl true
       def handle_continue(:open_port, %{port: port} = state) do
         socket = YellowDog.Socket.UDP.open!(port, as: :binary, mode: :active)
-        Logger.info("YellowDog.DNS.Server started on socket #{inspect(socket)}")
+        YLog.general("YellowDog.DNS.Server started on socket #{inspect(socket)}")
         # accept_loop(socket, handler)
         {:noreply, %{state | socket: socket}}
       end
@@ -38,8 +41,14 @@ defmodule YellowDog.DNS.Server do
 
         Task.async(fn ->
           response = handle(record, client)
-          YellowDog.Socket.Datagram.send!(socket, YellowDog.DNS.Record.encode(response), {ip, wtv})
-        end) |> Task.ignore()
+
+          YellowDog.Socket.Datagram.send!(
+            socket,
+            YellowDog.DNS.Record.encode(response),
+            {ip, wtv}
+          )
+        end)
+        |> Task.ignore()
 
         {:noreply, state}
       end

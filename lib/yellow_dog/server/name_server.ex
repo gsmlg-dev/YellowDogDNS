@@ -4,10 +4,12 @@ defmodule YellowDog.Server.NameServer do
   """
   @behaviour YellowDog.DNS.Server
   use YellowDog.DNS.Server
-  require Logger
+  alias YellowDog.Logger, as: YLog
 
-  @default_forwarder Application.compile_env(:yellow_dog, YellowDog.Server) |> Keyword.get(:default_forwarder)
+  @default_forwarder Application.compile_env(:yellow_dog, YellowDog.Server)
+                     |> Keyword.get(:default_forwarder)
 
+  @impl true
   def handle(record, _client) do
     # record: %YellowDog.DNS.Record{
     #   anlist: [],
@@ -26,10 +28,10 @@ defmodule YellowDog.Server.NameServer do
     #     unicast_response: false
     #   }]
     # }
-    # Logger.info(fn -> "#{inspect(record)}" end)
     query = hd(record.qdlist)
+
     # query: %YellowDog.DNS.Query{class: :in, domain: 'zdns.cn', type: :a, unicast_response: false}
-    Logger.info(fn -> "Query: #{inspect(query)}" end)
+    YLog.query(inspect(query))
 
     case YellowDog.Server.Zone.findByDomain(query) do
       {:ok, resourcs} ->
@@ -47,21 +49,15 @@ defmodule YellowDog.Server.NameServer do
             anlist: [],
             arlist: []
         }
-        forward_lookup(record)
 
-      _ ->
-        %{
-          record
-          | header: %{record.header | qr: true, ra: false, aa: true, rcode: 2},
-            anlist: [],
-            arlist: []
-        }
+        forward_lookup(record)
     end
   end
 
   # default_forwarder
   def forward_lookup(record, dns_server \\ @default_forwarder, proto \\ :udp) do
     encoded_record = record |> YellowDog.DNS.Record.encode()
+
     response_data =
       case proto do
         :udp ->

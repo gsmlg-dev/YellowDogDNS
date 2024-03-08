@@ -44,7 +44,7 @@ defmodule YellowDog.Socket.SSL do
   """
   @spec ciphers :: [:ssl.erl_cipher_suite()]
   def ciphers do
-    :ssl.cipher_suites(:all, 'tlsv1.3')
+    :ssl.cipher_suites(:all, ~c"tlsv1.3")
   end
 
   @doc """
@@ -62,7 +62,7 @@ defmodule YellowDog.Socket.SSL do
   @spec error(term) :: String.t()
   def error(code) do
     case :ssl.format_error(code) do
-      'Unexpected error:' ++ _ ->
+      ~c"Unexpected error:" ++ _ ->
         nil
 
       message ->
@@ -87,7 +87,8 @@ defmodule YellowDog.Socket.SSL do
   Connect to the given address and port tuple or SSL connect the given socket,
   raising if an error occurs.
   """
-  @spec connect!(YellowDog.Socket.t() | {YellowDog.Socket.t(), :inet.port_number()}) :: t | no_return
+  @spec connect!(YellowDog.Socket.t() | {YellowDog.Socket.t(), :inet.port_number()}) ::
+          t | no_return
   defbang(connect(socket_or_descriptor))
 
   @doc """

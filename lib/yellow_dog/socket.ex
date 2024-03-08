@@ -104,11 +104,15 @@ defmodule YellowDog.Socket do
   end
 
   def listen(%URI{scheme: "tcp", host: host, port: port}) do
-    YellowDog.Socket.TCP.listen(port, local: [address: if(host == "*", do: "0.0.0.0", else: host)])
+    YellowDog.Socket.TCP.listen(port,
+      local: [address: if(host == "*", do: "0.0.0.0", else: host)]
+    )
   end
 
   def listen(%URI{scheme: "ssl", host: host, port: port}) do
-    YellowDog.Socket.SSL.listen(port, local: [address: if(host == "*", do: "0.0.0.0", else: host)])
+    YellowDog.Socket.SSL.listen(port,
+      local: [address: if(host == "*", do: "0.0.0.0", else: host)]
+    )
   end
 
   def listen(%URI{scheme: "ws", host: host, port: port}) do
@@ -134,11 +138,15 @@ defmodule YellowDog.Socket do
   end
 
   def listen!(%URI{scheme: "tcp", host: host, port: port}) do
-    YellowDog.Socket.TCP.listen!(port, local: [address: if(host == "*", do: "0.0.0.0", else: host)])
+    YellowDog.Socket.TCP.listen!(port,
+      local: [address: if(host == "*", do: "0.0.0.0", else: host)]
+    )
   end
 
   def listen!(%URI{scheme: "ssl", host: host, port: port}) do
-    YellowDog.Socket.SSL.listen!(port, local: [address: if(host == "*", do: "0.0.0.0", else: host)])
+    YellowDog.Socket.SSL.listen!(port,
+      local: [address: if(host == "*", do: "0.0.0.0", else: host)]
+    )
   end
 
   def listen!(%URI{scheme: "ws", host: host, port: port}) do

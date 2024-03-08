@@ -1,4 +1,6 @@
 defmodule YellowDog.DNS do
+  alias YellowDog.Logger, as: YLog
+
   @doc """
   Resolves the answer for a YellowDog.DNS query.
 
@@ -57,7 +59,8 @@ defmodule YellowDog.DNS do
       iex> YellowDog.DNS.query("gsmlg.org", :a, { "1.2.4.8", 53}, :tcp)
 
   """
-  @spec query(String.t(), atom, {String.t(), :inet.port()}, :tcp | :udp) :: YellowDog.DNS.Record.t()
+  @spec query(String.t(), atom, {String.t(), :inet.port()}, :tcp | :udp) ::
+          YellowDog.DNS.Record.t()
   def query(domain, type \\ :a, dns_server \\ {"1.2.4.8", 53}, proto \\ :udp) do
     record = %YellowDog.DNS.Record{
       header: %YellowDog.DNS.Header{rd: true},
@@ -65,6 +68,7 @@ defmodule YellowDog.DNS do
     }
 
     encoded_record = YellowDog.DNS.Record.encode(record)
+    YLog.forward("Querying #{domain} for #{type} using #{proto} to #{inspect(dns_server)}")
 
     response_data =
       case proto do

@@ -46,7 +46,7 @@ defmodule YellowDog.Socket.TCP do
   @spec error(term) :: String.t()
   def error(code) do
     case :inet.format_error(code) do
-      'unknown POSIX error' ->
+      ~c"unknown POSIX error" ->
         nil
 
       message ->
@@ -136,7 +136,8 @@ defmodule YellowDog.Socket.TCP do
   Create a TCP socket listening on an OS chosen port using the given options or
   listening on the given port.
   """
-  @spec listen(:inet.port_number() | Keyword.t()) :: {:ok, t} | {:error, YellowDog.Socket.Error.t()}
+  @spec listen(:inet.port_number() | Keyword.t()) ::
+          {:ok, t} | {:error, YellowDog.Socket.Error.t()}
   def listen(port) when port |> is_integer do
     listen(port, [])
   end
@@ -155,7 +156,8 @@ defmodule YellowDog.Socket.TCP do
   @doc """
   Create a TCP socket listening on the given port and using the given options.
   """
-  @spec listen(:inet.port_number(), Keyword.t()) :: {:ok, t} | {:error, YellowDog.Socket.Error.t()}
+  @spec listen(:inet.port_number(), Keyword.t()) ::
+          {:ok, t} | {:error, YellowDog.Socket.Error.t()}
   def listen(port, options) when options |> is_list do
     options =
       options

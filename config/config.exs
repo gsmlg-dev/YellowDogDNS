@@ -18,5 +18,5 @@ import Config
 #
 
 config :yellow_dog, YellowDog.Server,
-  port: 5454,
+  port: 4053,
   default_forwarder: {"1.2.4.8", 53}

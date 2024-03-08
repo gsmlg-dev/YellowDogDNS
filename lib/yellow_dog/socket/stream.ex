@@ -226,7 +226,11 @@ defimpl YellowDog.Socket.Stream.Protocol, for: Tuple do
     case File.open!(
            path,
            [:read],
-           &YellowDog.Socket.Stream.io(self, &1, offset: offset, size: size, chunk_size: chunk_size)
+           &YellowDog.Socket.Stream.io(self, &1,
+             offset: offset,
+             size: size,
+             chunk_size: chunk_size
+           )
          ) do
       {:ok, :ok} ->
         :ok

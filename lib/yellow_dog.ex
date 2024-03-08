@@ -13,6 +13,6 @@ defmodule YellowDog do
 
   """
   def load_config do
-    # %YellowDog.Config{}
+    %YellowDog.Config{}
   end
 end

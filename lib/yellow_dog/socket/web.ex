@@ -934,7 +934,8 @@ defmodule YellowDog.Socket.Web do
   """
   @spec close(t) :: :ok | {:error, error}
   def close(%W{socket: socket, version: 13}) do
-    socket |> YellowDog.Socket.Stream.send(<<1::1, 0::3, opcode(:close)::4, forge(nil, <<>>)::binary>>)
+    socket
+    |> YellowDog.Socket.Stream.send(<<1::1, 0::3, opcode(:close)::4, forge(nil, <<>>)::binary>>)
   end
 
   @doc """
