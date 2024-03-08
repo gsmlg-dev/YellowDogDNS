@@ -1,4 +1,4 @@
-FROM docker.io/library/elixir:1.16 as builder
+FROM docker.io/library/elixir:1.16-alpine as builder
 
 COPY . /app
 WORKDIR /app
