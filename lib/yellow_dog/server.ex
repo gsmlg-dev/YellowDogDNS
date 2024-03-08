@@ -14,7 +14,7 @@ defmodule YellowDog.Server do
       {YellowDog.Server.NameServer, [name: YellowDog.Server.NameServer, port: port]}
     ]
 
-    YLog.general("Starting YellowDog Server on port #{port}")
+    YLog.general("\n\n#{YellowDog.banner()}\n\n")
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

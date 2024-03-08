@@ -30,7 +30,7 @@ defmodule YellowDog.DNS.Server do
       @impl true
       def handle_continue(:open_port, %{port: port} = state) do
         socket = YellowDog.Socket.UDP.open!(port, as: :binary, mode: :active)
-        YLog.general("YellowDog.DNS.Server started on socket #{inspect(socket)}")
+        YLog.general("YellowDog.DNS.Server started on port #{port} #{inspect(socket)}")
         # accept_loop(socket, handler)
         {:noreply, %{state | socket: socket}}
       end
