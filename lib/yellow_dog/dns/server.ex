@@ -36,20 +36,22 @@ defmodule YellowDog.DNS.Server do
       end
 
       @impl true
-      def handle_info({:udp, client, ip, wtv, data}, %{socket: socket} = state) do
-        record = YellowDog.DNS.Record.decode(data)
-        YLog.query("Query from #{inspect(ip)} payload: #{inspect(record.qdlist |> hd)}")
+      def handle_info({:udp, client, ip, port, data}, %{socket: socket} = state) do
+        query = YellowDog.DNS.Record.decode(data)
+        {a,b,c,d} = ip
+        ip_str = "#{a}.#{b}.#{c}.#{d}:#{port}"
+        YLog.query("Query from #{ip_str} payload: #{inspect(query)}")
 
         Task.async(fn ->
-          response = handle(record, client)
+          response = handle(query, client)
 
           YellowDog.Socket.Datagram.send!(
             socket,
             YellowDog.DNS.Record.encode(response),
-            {ip, wtv}
+            {ip, port}
           )
 
-          YLog.response("Response sent to #{inspect(ip)} for #{inspect(record.qdlist |> hd)}")
+          YLog.response("Response sent to #{ip_str} for #{inspect(query)} with: #{inspect(response)}")
         end)
         |> Task.ignore()
 
