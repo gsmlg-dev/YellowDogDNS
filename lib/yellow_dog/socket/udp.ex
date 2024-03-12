@@ -97,14 +97,14 @@ defmodule YellowDog.Socket.UDP do
       :ok ->
         :ok
 
-      :closed ->
+      {:error, :closed} ->
         raise RuntimeError, message: "the socket is closed"
 
-      :not_owner ->
+      {:error, :not_owner} ->
         raise RuntimeError, message: "the current process isn't the owner"
 
-      code ->
-        raise YellowDog.Socket.Error, reason: code
+      {:error, reason} ->
+        raise YellowDog.Socket.Error, reason: reason
     end
   end
 

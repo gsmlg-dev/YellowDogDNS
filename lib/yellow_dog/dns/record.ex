@@ -42,6 +42,9 @@ defmodule YellowDog.DNS.Record do
       Enum.map(struct.anlist, &YellowDog.DNS.Resource.from_record(&1))
       |> Enum.reject(&is_nil/1)
 
+    # authority = Enum.map(struct.nslist, &YellowDog.DNS.Resource.from_record(&1))
+    # |> Enum.reject(&is_nil/1)
+
     additional =
       Enum.map(struct.arlist, &YellowDog.DNS.Resource.from_record(&1))
       |> Enum.reject(&is_nil/1)
