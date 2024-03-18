@@ -519,7 +519,6 @@ defmodule YellowDog.DNS.RRType do
   """
   def dlv(), do: 32769
 
-
   def get_name(1), do: :a
   def get_name(2), do: :ns
   def get_name(3), do: :md

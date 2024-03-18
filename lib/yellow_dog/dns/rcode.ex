@@ -3,6 +3,27 @@ defmodule YellowDog.DNS.RCode do
   # DNS RCode
   DNS return code
 
+  It would appear from the DNS header that only four bits of
+  RCODE, or response/error code, are available.  However, RCODEs can
+  appear not only at the top level of a DNS response but also inside
+  TSIG RRs [RFC2845], TKEY RRs [RFC2930], and extended by OPT RRs
+  [RFC6891].  The OPT RR provides an 8-bit extension to the 4 header
+  bits, resulting in a 12-bit RCODE field, and the TSIG and TKEY RRs
+  have a 16-bit field designated in their RFCs as the "Error" field.
+
+  Error codes appearing in the DNS header and in these other RR types
+  all refer to the same error code space with the exception of error
+  code 16, which has a different meaning in the OPT RR than in the TSIG
+  RR, and error code 9, whose variations are described after the table
+  below.  The duplicate assignment of 16 was accidental.  To the extent
+  that any prior RFCs imply any sort of different error number space
+  for the OPT, TSIG, or TKEY RRs, they are superseded by this unified
+  DNS error number space.  (This paragraph is the reason this document
+  updates [RFC2845] and [RFC2930].)  With the existing exceptions of
+  error numbers 9 and 16, the same error number must not be assigned
+  for different errors even if they would only occur in different RR
+  types.  See table below.
+
       Range 	Registration Procedures
       0-3840	IETF Review
       3841-4095	Private Use
@@ -55,44 +76,54 @@ defmodule YellowDog.DNS.RCode do
   # Format Error
   """
   def form_err(), do: 1
+
   @doc """
   # Server Failure
   """
   @spec serv_fail() :: 2
   def serv_fail(), do: 2
+
   @doc """
   # Non-Existent Domain
   """
   def nx_domain, do: 3
+
   @doc """
   # Not Implemented
   """
   def not_imp(), do: 4
+
   @doc """
   # Query Refused
   """
   def refused(), do: 5
+
   @doc """
   # Name Exists when it should not
   """
   def yx_domain(), do: 6
+
   @doc """
   # RR Set Exists when it should not
   """
   def yx_rr_set(), do: 7
+
   @doc """
   # RR Set that should exist does not
   """
   def nx_rr_set(), do: 8
+
   @doc """
   # Server Not Authoritative for zone
   # Not Authorized
   """
   def not_auth(), do: 9
+
   @doc """
   # Name not contained in zone
   """
   def not_zone(), do: 10
+
   @doc """
   # DSO-TYPE Not Implemented
   """
@@ -102,39 +133,46 @@ defmodule YellowDog.DNS.RCode do
   # Bad OPT Version
   """
   def bad_vers(), do: 16
+
   @doc """
   # TSIG Signature Failure
   """
   def bad_sig(), do: 16
+
   @doc """
   # Key not recognized
   """
   def bad_key(), do: 17
+
   @doc """
   # Signature out of time window
   """
   def bad_time(), do: 18
+
   @doc """
   # Bad TKEY Mode
   """
   def bad_mode(), do: 19
+
   @doc """
   # Duplicate key name
   """
   def bad_name(), do: 20
+
   @doc """
   # Algorithm not supported
   """
   def bad_alg(), do: 21
+
   @doc """
   # Bad Truncation
   """
   def bad_trunc(), do: 22
+
   @doc """
   # Bad/missing Server Cookie
   """
   def bad_cookie(), do: 23
-
 
   def get_name(0), do: :no_error
   def get_name(1), do: :form_err

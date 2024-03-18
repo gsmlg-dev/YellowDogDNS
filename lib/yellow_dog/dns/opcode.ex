@@ -67,7 +67,8 @@ defmodule YellowDog.DNS.OpCode do
   def get_name(4), do: :notify
   def get_name(5), do: :update
   def get_name(6), do: :dso
-  def get_name(code) when is_integer(code) and (code == 3 or code > 6 and code <= 15) do
-   :unassigned
+
+  def get_name(code) when is_integer(code) and (code == 3 or (code > 6 and code <= 15)) do
+    :unassigned
   end
 end
