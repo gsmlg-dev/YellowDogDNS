@@ -12,14 +12,17 @@ if config_env() != :dev do
     port = System.get_env("YD_PORT") |> String.to_integer()
     config :yellow_dog, YellowDog.Server, port: port
   end
+
   if System.get_env("YD_FORWARDER") do
     ip = System.get_env("YD_FORWARDER")
-    port = if System.get_env("YD_FORWARDER_PORT") do
-      System.get_env("YD_FORWARDER_PORT") |> String.to_integer()
-    else
-      53
-    end
-    config :yellow_dog, YellowDog.Server,
-      default_forwarder: {ip, port}
+
+    port =
+      if System.get_env("YD_FORWARDER_PORT") do
+        System.get_env("YD_FORWARDER_PORT") |> String.to_integer()
+      else
+        53
+      end
+
+    config :yellow_dog, YellowDog.Server, default_forwarder: {ip, port}
   end
 end
